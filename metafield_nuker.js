@@ -8,3 +8,9 @@ String.prototype.toElapsedTime = function() {
 	var time = hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds';
 	return time;
 }
+
+try {
+
+} catch(error) {
+	console.log(error);
+}
