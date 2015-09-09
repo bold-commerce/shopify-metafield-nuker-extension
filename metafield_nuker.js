@@ -10,7 +10,17 @@ String.prototype.toElapsedTime = function() {
 }
 
 try {
+	// Get the current time so we can 
+	var startTime = Date.now();
 
+	
+	var finishTime = Date.now();
+	var elapsedTime = (finishTime - startTime) / 1000;
+	console.log('Job took ' + elapsedTime.toString().toElapsedTime() + ' to complete.')
 } catch(error) {
 	console.log(error);
+	
+	var finishTime = Date.now();
+	var elapsedTime = (finishTime - startTime) / 1000;
+	console.log('Job ran for ' + elapsedTime.toString().toElapsedTime() + ' before failing.')
 }
