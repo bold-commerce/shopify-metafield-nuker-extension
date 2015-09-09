@@ -120,8 +120,19 @@ try {
 			dataType: "json",
 			async: false,
 			success: function(data) {
+				for (var p = 0; p < data.metafields.length; p++) {
+					if (data.metafields[p].namespace == nameSpace) {
+						console.log('      Nuking metafields in namespace "' + nameSpace + '" for product ID: ' + products[i].id);
+						$.ajax({
+							method: "DELETE",
+							url: location.origin + "/admin/products/" + products[i].id + "/metafields/" + data.metafields[p].id + ".json",
+						});
+					}
+				}
 			},
 			error: function(result) {
+				// Throw an error to bail out of the try block
+				throw "Oops! Something happened getting the metafields for product ID: " + products[i].id + ". Error: " + result.status + " (" + result.statusText + ")";
 			}
 		});
 		console.log('  Finished nuking current product...');
