@@ -79,6 +79,11 @@ try {
 	for (var i = 0; i < products.length; i++) {
 		// Print the current product number compared to remaining
 		console.log('  Starting nuker on product ID: ' + products[i].id + ' - (' + (i + 1) + '/' + productCount + ').');
+		for (var o = 0; o < products[i].variants.length; o++) {
+			// Print the variant ID that we're checking
+			console.log('    Checking variant ID: ' + products[i].variants[o].id + ' for metafields in namespace: ' + nameSpace + ' - (' + (o + 1) + '/' + products[i].variants.length + ')');
+		}
+
 		console.log('  Finished nuking current product...');
 	}
 	
