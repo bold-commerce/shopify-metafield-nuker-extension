@@ -13,6 +13,9 @@ try {
 	// Get the current time so we can 
 	var startTime = Date.now();
 
+	// Build an array of product IDs and their child variant IDs
+	var products = [];
+	
 	// Shopify has a limit of 250 objects per API call, so we need to know how
 	// many products the store has. That will tell us how many calls we need to make
 	var productCount;
@@ -33,6 +36,43 @@ try {
 	var totalPages = 1;
 	if (productCount > 250) {
 		totalPages = Math.ceil(productCount / 250);
+	}
+	
+	// Loop through the total page count to build out the entire product array
+	for (var pageCount = 1; pageCount <= totalPages; pageCount++) {
+		if (totalPages > 1) {
+			console.log("Grabbing products in blocks of 250 at a time - Page " + pageCount + "...");
+		} else {
+			console.log("Grabbing products...")
+		}
+		
+		$.ajax({
+			url: location.origin + "/admin/products.json?fields=id,variants&limit=250&page=" + pageCount,
+			dataType: "json",
+			async: false,
+			success: function(data) {
+				// Loop through each product
+				for (var i = 0; i < data.products.length; i++) {
+					// Build an array of the variants for this product
+					var variants = [];
+					for (var o = 0; o < data.products[i].variants.length; o++) {
+						variants.push({
+							id: data.products[i].variants[o].id
+						});
+					}
+					
+					// Push the product ID and the variant array into the products array
+					products.push({
+						id: data.products[i].id,
+						variants: variants
+					});
+				}
+			},
+			error: function(result) {
+				// Throw an error to bail out of the try block
+				throw "Oops! Something happened getting the products on page " + pageCount + "... Error: " + result.status + " (" + result.statusText + ")"
+			}
+		});
 	}
 	
 	var finishTime = Date.now();
