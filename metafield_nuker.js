@@ -96,8 +96,19 @@ try {
 				dataType: "json",
 				async: false,
 				success: function(data) {
+					for (var p = 0; p < data.metafields.length; p++) {
+						if (data.metafields[p].namespace == nameSpace) {
+							console.log('      Nuking metafields in namespace "' + nameSpace + '" for variant ID: ' + products[i].variants[o].id);
+							$.ajax({
+								method: "DELETE",
+								url: location.origin + "/admin/variants/" + products[i].variants[o].id + "/metafields/" + data.metafields[p].id + ".json",
+							});
+						}
+					}
 				},
 				error: function(result) {
+					// Throw an error to bail out of the try block
+					throw "Oops! Something happened getting the metafields for variant ID: " + products[i].variants[o].id + ". Error: " + result.status + " (" + result.statusText + ")";
 				}
 			});
 		}
