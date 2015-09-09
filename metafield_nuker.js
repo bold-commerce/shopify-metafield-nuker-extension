@@ -82,6 +82,15 @@ try {
 		for (var o = 0; o < products[i].variants.length; o++) {
 			// Print the variant ID that we're checking
 			console.log('    Checking variant ID: ' + products[i].variants[o].id + ' for metafields in namespace: ' + nameSpace + ' - (' + (o + 1) + '/' + products[i].variants.length + ')');
+			$.ajax({
+				url: location.origin + "/admin/variants/" + products[i].variants[o].id + "/metafields.json?fields=id,namespace",
+				dataType: "json",
+				async: false,
+				success: function(data) {
+				},
+				error: function(result) {
+				}
+			});
 		}
 
 		console.log('  Finished nuking current product...');
