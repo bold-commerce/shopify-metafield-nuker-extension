@@ -75,6 +75,13 @@ try {
 		});
 	}
 	
+	// Loop through each product and start checking for the metafields
+	for (var i = 0; i < products.length; i++) {
+		// Print the current product number compared to remaining
+		console.log('  Starting nuker on product ID: ' + products[i].id + ' - (' + (i + 1) + '/' + productCount + ').');
+		console.log('  Finished nuking current product...');
+	}
+	
 	var finishTime = Date.now();
 	var elapsedTime = (finishTime - startTime) / 1000;
 	console.log('Job took ' + elapsedTime.toString().toElapsedTime() + ' to complete.')
