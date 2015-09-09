@@ -13,6 +13,15 @@ try {
 	// Get the current time so we can 
 	var startTime = Date.now();
 
+	// Define which metafield namespace we're targeting
+	/*
+	 * Buy The Measurement: bold_measurement
+	 * Customer Pricing: shappify_csp
+	 * Quantity Breaks: shappify_qb
+	 *
+	 */
+	var nameSpace = "bold_measurement";
+
 	// Build an array of product IDs and their child variant IDs
 	var products = [];
 	
