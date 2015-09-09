@@ -29,6 +29,11 @@ try {
 			throw "Oops! Something happened getting the product count... Error: " + result.status + " (" + result.statusText + ")";
 		}
 	});
+	// Figure out how many pages of products we need to pull
+	var totalPages = 1;
+	if (productCount > 250) {
+		totalPages = Math.ceil(productCount / 250);
+	}
 	
 	var finishTime = Date.now();
 	var elapsedTime = (finishTime - startTime) / 1000;
