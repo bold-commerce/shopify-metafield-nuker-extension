@@ -113,6 +113,17 @@ try {
 			});
 		}
 
+		// Print the product ID that we're checking
+        console.log('    Checking product ID: ' + products[i].id + ' for metafields in namespace: ' + nameSpace);
+		$.ajax({
+			url: location.origin + "/admin/products/" + products[i].id + "/metafields.json?fields=id,namespace",
+			dataType: "json",
+			async: false,
+			success: function(data) {
+			},
+			error: function(result) {
+			}
+		});
 		console.log('  Finished nuking current product...');
 	}
 	
