@@ -1,0 +1,24 @@
+#nukerJSbar{background:#57666f;position:fixed;top:0;left:0;width:100%;z-index:9999;transition:top .5s}
+#nukerJSbar ul{list-style: none;margin:0;color:#fff}
+#nukerJSbar li, #nukerJSbar li a{display: inline-block}
+#nukerJSbar li {float:left}
+#nukerJSbar li:first-child{width: 197px;background: #21C2A8;font-size: 12px;line-height: 20px}
+#nukerJSbar li:nth-child(2){background: #1D2225}
+#nukerJSbar li a{padding:.5em;border-left:1px solid #3F4645;transition:background .2s;color:#C8D1D1;height: 32px;}
+#nukerJSbar li a.active{background:#1C1E1F;}
+#nukerJSbar li a:hover{background:#139989;text-decoration: none;color:#fff}
+#nukerJSbar li:nth-child(2) a:hover{background: #139989}
+#nukerJSbar li:last-child{float:right}
+#nukerJSbar li:first-child a{border-left: none;width: 100%;text-align: center;color:#fff;}
+#nukerJSbar li:last-child a, #nukerJSbar li:nth-child(2) a{border-left:none}
+#nukerJSbar .ico-16{margin:2px 0 0 2px;}
+#nukerJSbar *, #nukerJSbar *:before, #nukerJSbar *:after {-moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box;}
+
+.nukerJSoverride .next-nav {top:32px;}
+.nukerJSoverride .header-row {top: 32px;}
+.nukerJSoverride #sidebar {top: 36px}
+.nukerJSoverride #products-show {padding-top:32px;}
+
+body, .global-search__pane{padding-top:32px}
+
+.hidden { display:none; }
