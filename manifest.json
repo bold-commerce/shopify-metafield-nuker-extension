@@ -10,4 +10,9 @@
 		"http://*.myshopify.com/*",
 		"https://*.myshopify.com/*"
 	]
+	
+	"browser_action": {
+		"default_icon": "icon.png",
+		"default_title": "Bold Metafield Nuker"
+	}
 }
