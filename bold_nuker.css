@@ -24,3 +24,5 @@
 body, .global-search__pane{padding-top:32px}
 
 .hidden { display:none; }
+
+#ns-selector {margin-left: 6px;margin-right: 6px;margin-top: 2px;}
