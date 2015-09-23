@@ -16,6 +16,8 @@
 
 .nukerJSoverride .next-nav {top:32px;}
 .nukerJSoverride .header-row {top: 32px;}
+.nukerJSoverride .nav-toggle {top: 32px;}
+.nukerJSoverride .timeline-feed__toggle {top: 44px;}
 .nukerJSoverride #sidebar {top: 36px}
 .nukerJSoverride #products-show {padding-top:32px;}
 
