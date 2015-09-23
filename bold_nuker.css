@@ -2,12 +2,12 @@
 #nukerJSbar ul{list-style: none;margin:0;color:#fff}
 #nukerJSbar li, #nukerJSbar li a{display: inline-block}
 #nukerJSbar li {float:left}
-#nukerJSbar li:first-child{width: 197px;background: #21C2A8;font-size: 12px;line-height: 20px}
+#nukerJSbar li:first-child{width: 197px;background: rgb(222,54,38);font-size: 12px;line-height: 20px}
 #nukerJSbar li:nth-child(2){background: #1D2225}
 #nukerJSbar li a{padding:.5em;border-left:1px solid #3F4645;transition:background .2s;color:#C8D1D1;height: 32px;}
 #nukerJSbar li a.active{background:#1C1E1F;}
-#nukerJSbar li a:hover{background:#139989;text-decoration: none;color:#fff}
-#nukerJSbar li:nth-child(2) a:hover{background: #139989}
+#nukerJSbar li a:hover{background: rgb(197,32,17);text-decoration: none;color:#fff}
+#nukerJSbar li:nth-child(2) a:hover{background: rgb(197,32,17)}
 #nukerJSbar li:last-child{float:right}
 #nukerJSbar li:first-child a{border-left: none;width: 100%;text-align: center;color:#fff;}
 #nukerJSbar li:last-child a, #nukerJSbar li:nth-child(2) a{border-left:none}
