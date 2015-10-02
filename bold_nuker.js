@@ -284,6 +284,14 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 		if (variantIndex < variantList.length) {
 			// Print the variant ID that we're checking
 			console.log('    Checking variant ID: ' + variantList[variantIndex].id + ' for metafields in namespace: ' + targetNamespace + ' - (' + (variantIndex + 1) + '/' + variantList.length + ')');
+			$.ajax({
+				url: location.origin + "/admin/variants/" + variantList[variantIndex].id + "/metafields.json?fields=id,namespace",
+				dataType: "json",
+				success: function(data) {
+				},
+				error: function(result) {
+				}
+			});
 		} else {
 			// Print the product ID that we're checking
 			console.log('    Checking product ID: ' + productList[productIndex].id + ' for metafields in namespace: ' + targetNamespace);
