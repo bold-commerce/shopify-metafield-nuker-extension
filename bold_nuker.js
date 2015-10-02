@@ -338,6 +338,7 @@ function deleteMetafield(objectType, objectId, metafieldId) {
 		method: "DELETE",
 		url: location.origin + "/admin/" + objectType + "/" + objectId + "/metafields/" + metafieldId + ".json",
 		success: function(result) {
+			console.log('      Nuked metafield ID ' + metafieldId + ' in namespace "' + targetNamespace + '" for ' + objectType + ' ID: ' + objectId);
 		},
 		error: function(result) {
 			throw "Oops! Something happened deleting the metafield... Error: " + result.status + " (" + result.statusText + ")";
