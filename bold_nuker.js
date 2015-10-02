@@ -197,6 +197,18 @@ function startMetafieldNuker() {
 }
 
 function getProductCount() {
+	productCount = 0;
+	variantCount = 0;
+	
+	// Shopify has a limit of 250 objects per API call, so we need to know how
+	// many products the store has. That will tell us how many pages we need to request.
+	$.ajax({
+		url: location.origin + "/admin/products/count.json",
+		success: function(result) {
+		},
+		error: function(result) {
+		}
+	});
 }
 
 function getProductsByPage(productList, totalPages, pageIndex) {
