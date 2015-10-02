@@ -290,6 +290,8 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 				success: function(data) {
 				},
 				error: function(result) {
+					// Throw an error to bail out of the try block
+					throw "Oops! Something happened getting the metafields for variant ID: " + productList[productIndex].variants[o].id + ". Error: " + result.status + " (" + result.statusText + ")";
 				}
 			});
 		} else {
