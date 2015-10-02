@@ -259,6 +259,9 @@ function getProductsByPage(productList, totalPages, pageIndex) {
 						variants: variants
 					});
 				}
+				
+				pageIndex++;
+				getProductsByPage(productList, totalPages, pageIndex);
 			},
 			error: function(result) {
 				// Throw an error to bail out of the try block
