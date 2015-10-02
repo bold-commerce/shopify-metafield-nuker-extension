@@ -178,6 +178,13 @@ String.prototype.toElapsedTime = function() {
 // 	}
 // }
 
+var startTime;
+var finishTime;
+var productCount;
+var variantCount;
+var targetNamespace;
+var loggingEnabled;
+
 function startMetafieldNuker() {
 }
 
