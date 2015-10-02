@@ -347,4 +347,8 @@ function deleteMetafield(objectType, objectId, metafieldId) {
 }
 
 function houseKeeping() {
+	finishTime = Date.now();
+	var elapsedTime = (finishTime - startTime) / 1000;
+	console.log('Finished checking ' + variantCount + ' variants.');
+	console.log('Job took ' + elapsedTime.toString().toElapsedTime() + ' to complete.');
 }
