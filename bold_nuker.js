@@ -236,6 +236,16 @@ function getProductsByPage(productList, totalPages, pageIndex) {
 		} else {
 			console.log("Grabbing products...")
 		}
+		
+		// Get the products for the current page
+		$.ajax({
+			url: location.origin + "/admin/products.json?fields=id,variants&limit=250&page=" + pageIndex,
+			dataType: "json",
+			success: function(data) {
+			},
+			error: function(result) {
+			}
+		});
 	} else {
 	}
 }
