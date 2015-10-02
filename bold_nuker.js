@@ -288,6 +288,15 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 				url: location.origin + "/admin/variants/" + variantList[variantIndex].id + "/metafields.json?fields=id,namespace",
 				dataType: "json",
 				success: function(data) {
+					for (var m = 0; m < data.metafields.length; m++) {
+						if (data.metafields[m].namespace == targetNamespace) {
+							// Delete the metafield
+							deleteMetafield("variant", variantList[variantIndex].id, data.metafields[m].id);
+						}
+					}
+					
+					variantIndex++;
+					checkProducts(productList, productIndex, variantList, variantIndex);
 				},
 				error: function(result) {
 					// Throw an error to bail out of the try block
