@@ -177,3 +177,21 @@ String.prototype.toElapsedTime = function() {
 // 		console.log('Job ran for ' + elapsedTime.toString().toElapsedTime() + ' before failing.')
 // 	}
 // }
+
+function startMetafieldNuker() {
+}
+
+function getProductCount() {
+}
+
+function getProductsByPage(productList, totalPages, pageIndex) {
+}
+
+function checkProducts(productList, productIndex, variantList, variantIndex) {
+}
+
+function deleteMetafield(objectType, objectId, metafieldId) {
+}
+
+function houseKeeping() {
+}
