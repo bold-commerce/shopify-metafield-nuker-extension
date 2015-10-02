@@ -207,6 +207,8 @@ function getProductCount() {
 		success: function(result) {
 		},
 		error: function(result) {
+			// Throw an error to bail out of the try block
+			throw "Oops! Something happened getting the product count... Error: " + result.status + " (" + result.statusText + ")";
 		}
 	});
 }
