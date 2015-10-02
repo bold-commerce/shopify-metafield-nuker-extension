@@ -340,6 +340,7 @@ function deleteMetafield(objectType, objectId, metafieldId) {
 		success: function(result) {
 		},
 		error: function(result) {
+			throw "Oops! Something happened deleting the metafield... Error: " + result.status + " (" + result.statusText + ")";
 		}
 	});
 }
