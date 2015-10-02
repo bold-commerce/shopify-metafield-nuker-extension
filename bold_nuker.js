@@ -269,6 +269,8 @@ function getProductsByPage(productList, totalPages, pageIndex) {
 			}
 		});
 	} else {
+		// We have all the products, lets go forward.
+		checkProducts(productList, 0, null, 0);
 	}
 }
 
