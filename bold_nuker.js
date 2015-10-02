@@ -242,6 +242,23 @@ function getProductsByPage(productList, totalPages, pageIndex) {
 			url: location.origin + "/admin/products.json?fields=id,variants&limit=250&page=" + pageIndex,
 			dataType: "json",
 			success: function(data) {
+				// Loop through each product
+				for (var i = 0; i < data.products.length; i++) {
+					// Build an array of the variants for this product
+					var variants = [];
+					for (var o = 0; o < data.products[i].variants.length; o++) {
+						variants.push({
+							id: data.products[i].variants[o].id
+						});
+						variantCount++;
+					}
+					
+					// Push the product ID and the variant array into the products array
+					productList.push({
+						id: data.products[i].id,
+						variants: variants
+					});
+				}
 			},
 			error: function(result) {
 				// Throw an error to bail out of the try block
