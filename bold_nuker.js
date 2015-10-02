@@ -230,6 +230,12 @@ function getProductCount() {
 function getProductsByPage(productList, totalPages, pageIndex) {
 	// Loop through the total page count to build out the entire product array
 	if (pageIndex <= totalPages) {
+		// If there are multiple pages, log which page we're grabbing.
+		if (totalPages > 1) {
+			console.log("Grabbing products in blocks of 250 at a time - Page " + pageIndex + "...");
+		} else {
+			console.log("Grabbing products...")
+		}
 	} else {
 	}
 }
