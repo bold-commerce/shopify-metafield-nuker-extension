@@ -334,6 +334,14 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 }
 
 function deleteMetafield(objectType, objectId, metafieldId) {
+	$.ajax({
+		method: "DELETE",
+		url: location.origin + "/admin/" + objectType + "/" + objectId + "/metafields/" + metafieldId + ".json",
+		success: function(result) {
+		},
+		error: function(result) {
+		}
+	});
 }
 
 function houseKeeping() {
