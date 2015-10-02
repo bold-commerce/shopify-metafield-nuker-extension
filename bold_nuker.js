@@ -192,6 +192,8 @@ function startMetafieldNuker() {
 	// Get the namespace & logging setting
 	targetNamespace = $('#namespace').val();
 	loggingEnabled = $('#logging').val();
+	
+	getProductCount();
 }
 
 function getProductCount() {
