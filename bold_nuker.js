@@ -228,6 +228,10 @@ function getProductCount() {
 }
 
 function getProductsByPage(productList, totalPages, pageIndex) {
+	// Loop through the total page count to build out the entire product array
+	if (pageIndex <= totalPages) {
+	} else {
+	}
 }
 
 function checkProducts(productList, productIndex, variantList, variantIndex) {
