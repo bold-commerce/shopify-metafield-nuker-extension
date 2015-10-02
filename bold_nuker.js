@@ -310,6 +310,15 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 				url: location.origin + "/admin/products/" + productList[productIndex].id + "/metafields.json?fields=id,namespace",
 				dataType: "json",
 				success: function(data) {
+					for (var m = 0; m < data.metafields.length; m++) {
+						if (data.metafields[m].namespace == targetNamespace) {
+							// Delete the metafield
+							deleteMetafield("product", productList[productIndex].id, data.metafields[m].id);
+						}
+					}
+					
+					productIndex++;
+					checkProducts(productList, productIndex, null, 0);
 				},
 				error: function(result) {
 					// Throw an error to bail out of the try block
