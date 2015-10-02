@@ -306,6 +306,14 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 		} else {
 			// Print the product ID that we're checking
 			console.log('    Checking product ID: ' + productList[productIndex].id + ' for metafields in namespace: ' + targetNamespace);
+			$.ajax({
+				url: location.origin + "/admin/products/" + productList[productIndex].id + "/metafields.json?fields=id,namespace",
+				dataType: "json",
+				success: function(data) {
+				},
+				error: function(result) {
+				}
+			});
 		}
 	} else {
 	}
