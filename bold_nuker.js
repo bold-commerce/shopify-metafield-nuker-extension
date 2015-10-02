@@ -205,6 +205,20 @@ function getProductCount() {
 	$.ajax({
 		url: location.origin + "/admin/products/count.json",
 		success: function(result) {
+			// Store the product count globally
+			productCount = result.count;
+			
+			// Print a message detailing how many products were found and on what store
+			console.log("Found " + productCount + " products on " + location.origin);
+			
+			// Figure out how many pages of products we need to pull
+			var totalPages = 1;
+			if (productCount > 250) {
+				totalPages = Math.ceil(productCount / 250);
+			}
+			
+			var productList = [];
+			getProductsByPage(productList, totalPages, 1);
 		},
 		error: function(result) {
 			// Throw an error to bail out of the try block
