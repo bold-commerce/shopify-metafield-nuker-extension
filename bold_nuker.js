@@ -186,6 +186,12 @@ var targetNamespace;
 var loggingEnabled;
 
 function startMetafieldNuker() {
+	// Get the current time so we can determine the job duration
+	startTime = Date.now();
+
+	// Get the namespace & logging setting
+	targetNamespace = $('#namespace').val();
+	loggingEnabled = $('#logging').val();
 }
 
 function getProductCount() {
