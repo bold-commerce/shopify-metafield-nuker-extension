@@ -275,6 +275,10 @@ function getProductsByPage(productList, totalPages, pageIndex) {
 }
 
 function checkProducts(productList, productIndex, variantList, variantIndex) {
+	// Loop through each product and start checking for the metafields
+	if (productIndex < productList.length) {
+	} else {
+	}
 }
 
 function deleteMetafield(objectType, objectId, metafieldId) {
