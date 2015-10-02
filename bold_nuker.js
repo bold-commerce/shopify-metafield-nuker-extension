@@ -281,6 +281,13 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 			variantList = productList[productIndex].variants;
 		}
 		
+		if (variantIndex < variantList.length) {
+			// Print the variant ID that we're checking
+			console.log('    Checking variant ID: ' + variantList[variantIndex].id + ' for metafields in namespace: ' + targetNamespace + ' - (' + (variantIndex + 1) + '/' + variantList.length + ')');
+		} else {
+			// Print the product ID that we're checking
+			console.log('    Checking product ID: ' + productList[productIndex].id + ' for metafields in namespace: ' + targetNamespace);
+		}
 	} else {
 	}
 }
