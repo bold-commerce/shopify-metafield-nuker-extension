@@ -327,6 +327,9 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 			});
 		}
 	} else {
+		// We're done!
+		console.log('  Finished nuking current product...');
+		houseKeeping();
 	}
 }
 
