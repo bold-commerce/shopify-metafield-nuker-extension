@@ -9,8 +9,8 @@ $('#ns-selector').append('<option value="bold_measurement">Buy the Measurement</
 $('#ns-selector').append('<option value="shappify_csp">Customer Pricing</option>');
 $('#ns-selector').append('<option value="shappify_bundle">Product Bundles</option>');
 $('#ns-selector').append('<option value="shappify_qb">Quantity Breaks</option>');
-$('#nukerJSnav').append('<li><a id="bn_settings" href="#">Settings</a></li>');
 $('#nukerJSnav').append('<li><a id="bn_nuke">Nuke Metafields</a></li>');
+$('#nukerJSnav').append('<li><a id="bn_settings">Settings</a></li>');
 $('#nukerJSnav').append('<li></li>');
 $('#nukerJSbar .wrapper').append('<input type="hidden" id="namespace" value="shappify_csp">');
 $('#nukerJSbar .wrapper').append('<input type="hidden" id="logging" value="true">');
