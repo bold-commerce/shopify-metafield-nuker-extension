@@ -12,7 +12,7 @@ $('#ns-selector').append('<option value="shappify_qb">Quantity Breaks</option>')
 $('#nukerJSnav').append('<li><a id="bn_nuke">Nuke Metafields</a></li>');
 $('#nukerJSnav').append('<li><a id="bn_settings">Settings</a></li>');
 $('#nukerJSnav').append('<li></li>');
-$('#nukerJSbar .wrapper').append('<input type="hidden" id="namespace" value="shappify_csp">');
+$('#nukerJSbar .wrapper').append('<input type="hidden" id="namespace" value="bold_measurement">');
 $('#nukerJSbar .wrapper').append('<input type="hidden" id="logging" value="true">');
 
 $('#ns-selector').on('change', function() {
