@@ -3,7 +3,7 @@
 	
 	"name": "Bold Metafield Nuker (BETA)",
 	"description": "This extension wipes out Bold Commerce specific metafields from products & variants on a Shopify store.",
-	"version": "0.1.1",
+	"version": "0.2.0",
 	
 	"background": {
 		"scripts": ["background.js"]
