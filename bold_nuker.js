@@ -8,6 +8,7 @@ $('#nukerJSnav').append('<li><select id="ns-selector"></select></li>');
 $('#ns-selector').append('<option value="bold_measurement">Buy the Measurement</option>');
 $('#ns-selector').append('<option value="shappify_csp">Customer Pricing</option>');
 $('#ns-selector').append('<option value="shappify_bundle">Product Bundles</option>');
+$('#ns-selector').append('<option value="inventory">Product Discount</option>');
 $('#ns-selector').append('<option value="shappify_qb">Quantity Breaks</option>');
 $('#nukerJSnav').append('<li><a id="bn_nuke">Nuke Metafields</a></li>');
 $('#nukerJSnav').append('<li><a id="bn_settings">Settings</a></li>');
