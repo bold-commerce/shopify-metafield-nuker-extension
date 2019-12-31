@@ -1,136 +1,164 @@
-$('html').addClass('nukerJSoverride');
-$('body').append('<div id="nukerJSbar" class="fadein"></div>');
-$('#nukerJSbar').append('<div class="wrapper clearfix"></div>');
-$('#nukerJSbar .wrapper').append('<ul id="nukerJSnav"></ul>');
-$('#nukerJSnav').append('<li><a id="bn_about">About Nuker</a></li>');
-$('#nukerJSnav').append('<li class="hidden"></li>');
-$('#nukerJSnav').append('<li><select id="ns-selector"></select></li>');
-$('#ns-selector').append('<option value="bold_measurement">Buy the Measurement</option>');
-$('#ns-selector').append('<option value="shappify_csp">Customer Pricing</option>');
-$('#ns-selector').append('<option value="shappify_bundle">Product Bundles</option>');
-$('#ns-selector').append('<option value="inventory">Product Discount</option>');
-$('#ns-selector').append('<option value="shappify_qb">Quantity Breaks</option>');
-$('#nukerJSnav').append('<li><a id="bn_nuke">Nuke Metafields</a></li>');
-$('#nukerJSnav').append('<li><a id="bn_settings">Settings</a></li>');
-$('#nukerJSnav').append('<li></li>');
-$('#nukerJSbar .wrapper').append('<input type="hidden" id="namespace" value="bold_measurement">');
-$('#nukerJSbar .wrapper').append('<input type="hidden" id="logging" value="true">');
+document.querySelector('html').classList.add('nukerJSoverride');
+document.querySelector('body').innerHTML += ('<div id="nukerJSbar" class="fadein"></div>');
+document.querySelector('#nukerJSbar').innerHTML += ('<div class="wrapper clearfix"></div>');
+document.querySelector('#nukerJSbar .wrapper').innerHTML += ('<ul id="nukerJSnav"></ul>');
+document.querySelector('#nukerJSnav').innerHTML += ('<li><a id="bn_about">About Nuker</a></li>');
+document.querySelector('#nukerJSnav').innerHTML += ('<li class="hidden"></li>');
+document.querySelector('#nukerJSnav').innerHTML += ('<li><select id="ns-selector"></select></li>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="bold_measurement">Buy the Measurement</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_csp">Customer Pricing</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_bundle">Product Bundles</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="inventory">Product Discount</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_qb">Quantity Breaks</option>');
+document.querySelector('#nukerJSnav').innerHTML += ('<li><a id="bn_nuke">Nuke Metafields</a></li>');
+document.querySelector('#nukerJSnav').innerHTML += ('<li><a id="bn_settings">Settings</a></li>');
+document.querySelector('#nukerJSnav').innerHTML += ('<li></li>');
+document.querySelector('#nukerJSbar .wrapper').innerHTML += ('<input type="hidden" id="namespace" value="bold_measurement">');
+document.querySelector('#nukerJSbar .wrapper').innerHTML += ('<input type="hidden" id="logging" value="true">');
 
-$('#ns-selector').on('change', function() {
-	$('#namespace').val($('#ns-selector option:selected').val())
+document.querySelector('#ns-selector').addEventListener('change', function () {
+	document.querySelector("#namespace").value = document.querySelector("#ns-selector").value;
 });
-$('#bn_nuke').on('click', function() {
+document.querySelector('#bn_nuke').addEventListener('click', function () {
 	startMetafieldNuker();
 });
 
 // Extend the String class with a function that 
-String.prototype.toElapsedTime = function() {
+String.prototype.toElapsedTime = function () {
 	var sec_num = parseInt(this, 10);
-	var hours 	= Math.floor(sec_num / 3600);
+	var hours = Math.floor(sec_num / 3600);
 	var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
 	var seconds = sec_num - (hours * 3600) - (minutes * 60);
-	
+
 	var time = hours + ' hours, ' + minutes + ' minutes, ' + seconds + ' seconds';
 	return time;
 }
 
-var startTime;
-var finishTime;
-var productCount;
-var variantCount;
-var targetNamespace;
-var loggingEnabled;
+var BOLD = BOLD || {};
+BOLD.metafieldNuker = {
+	startTime: null,
+	finishTime: null,
+	productCount: null,
+	variantCount: null,
+	targetNamespace: null,
+	loggingEnabled: null,
+	totalPages: null,
+	productList: null,
+	pageIndex: null,
+
+
+}
 
 function startMetafieldNuker() {
 	// Get the current time so we can determine the job duration
-	startTime = Date.now();
+	BOLD.metafieldNuker.startTime = Date.now();
 
 	// Get the namespace & logging setting
-	targetNamespace = $('#namespace').val();
-	loggingEnabled = $('#logging').val();
-	
+	BOLD.metafieldNuker.targetNamespace = document.querySelector('#namespace').value;
+	BOLD.metafieldNuker.loggingEnabled = document.querySelector('#logging').value;
+
 	getProductCount();
 }
 
 function getProductCount() {
-	productCount = 0;
-	variantCount = 0;
-	
+	BOLD.metafieldNuker.productCount = 0;
+	BOLD.metafieldNuker.variantCount = 0;
+
+
 	// Shopify has a limit of 250 objects per API call, so we need to know how
 	// many products the store has. That will tell us how many pages we need to request.
-	$.ajax({
-		url: location.origin + "/admin/products/count.json",
-		success: function(result) {
-			// Store the product count globally
-			productCount = result.count;
-			
-			// Print a message detailing how many products were found and on what store
-			console.log("Found " + productCount + " products on " + location.origin);
-			
-			// Figure out how many pages of products we need to pull
-			var totalPages = 1;
-			if (productCount > 250) {
-				totalPages = Math.ceil(productCount / 250);
+	var xhr = new XMLHttpRequest();
+	xhr.open('GET', location.origin + "/admin/products/count.json");
+	xhr.send();
+
+	xhr.onreadystatechange = function (e) {
+		if (xhr.readyState == 2) {
+			console.log("Sending Request in progress");
+
+		} else if (xhr.readyState == 3) {
+			//request completed, error?
+			if (xhr.status == 200) {
+				BOLD.metafieldNuker.productCount = JSON.parse(xhr.response).count;
+				// Print a message detailing how many products were found and on what store
+				console.log("Found " + BOLD.metafieldNuker.productCount + " products on " + location.origin);
+				BOLD.metafieldNuker.totalPages = 1;
+
+				// Figure out how many pages of products we need to pull
+				if (BOLD.metafieldNuker.productCount > 250) {
+					BOLD.metafieldNuker.totalPages = Math.ceil(BOLD.metafieldNuker.productCount / 250);
+				}
+
+				BOLD.metafieldNuker.productList = [];
+				BOLD.metafieldNuker.pageIndex = 1;
+				getProductsByPage(BOLD.metafieldNuker.pageIndex);
+			} else {
+				// Throw an error to bail out of the try block
+				throw "Oops! Something happened getting the product count... Error: " + xhr.response;
 			}
-			
-			var productList = [];
-			getProductsByPage(productList, totalPages, 1);
-		},
-		error: function(result) {
-			// Throw an error to bail out of the try block
-			throw "Oops! Something happened getting the product count... Error: " + result.status + " (" + result.statusText + ")";
 		}
-	});
+	}
 }
 
-function getProductsByPage(productList, totalPages, pageIndex) {
+function getProductsByPage() {
 	// Loop through the total page count to build out the entire product array
-	if (pageIndex <= totalPages) {
+	if (BOLD.metafieldNuker.pageIndex <= BOLD.metafieldNuker.totalPages) {
 		// If there are multiple pages, log which page we're grabbing.
-		if (totalPages > 1) {
-			console.log("Grabbing products in blocks of 250 at a time - Page " + pageIndex + "...");
+		if (BOLD.metafieldNuker.totalPages > 1) {
+			console.log("Grabbing products in blocks of 250 at a time - Page " + BOLD.metafieldNuker.pageIndex + "...");
 		} else {
-			console.log("Grabbing products...")
+			console.log("Grabbing products...");
 		}
-		
+
+		var xhr = new XMLHttpRequest();
+		xhr.open('GET', location.origin + "/admin/products.json?fields=id,variants&limit=250&page=" + BOLD.metafieldNuker.pageIndex);
+		xhr.setRequestHeader('data-type', 'json')
+		xhr.send();
+
 		// Get the products for the current page
-		$.ajax({
-			url: location.origin + "/admin/products.json?fields=id,variants&limit=250&page=" + pageIndex,
-			dataType: "json",
-			success: function(data) {
-				// Loop through each product
-				for (var i = 0; i < data.products.length; i++) {
-					// Build an array of the variants for this product
-					var variants = [];
-					for (var o = 0; o < data.products[i].variants.length; o++) {
-						variants.push({
-							id: data.products[i].variants[o].id
+		xhr.onreadystatechange = function () {
+			if (xhr.readyState == 2) {
+				console.log("Sending Request in progress");
+
+			} else if (xhr.readyState == 3) {
+				//request completed, error?
+				if (xhr.status == 200) {
+					var data = JSON.parse(xhr.response);
+
+					// Loop through each product
+					for (var i = 0; i < data.products.length; i++) {
+						// Build an array of the variants for this product
+						var variants = [];
+						for (var o = 0; o < data.products[i].variants.length; o++) {
+							variants.push({
+								id: data.products[i].variants[o].id
+							});
+							BOLD.metafieldNuker.variantCount++;
+						}
+
+						// Push the product ID and the variant array into the products array
+						BOLD.metafieldNuker.productList.push({
+							id: data.products[i].id,
+							variants: variants
 						});
-						variantCount++;
 					}
-					
-					// Push the product ID and the variant array into the products array
-					productList.push({
-						id: data.products[i].id,
-						variants: variants
-					});
+
+					BOLD.metafieldNuker.pageIndex++;
+					getProductsByPage(BOLD.metafieldNuker.pageIndex);
+
+				} else {
+					// Throw an error to bail out of the try block
+					throw "Oops! Something happened getting the product list... Error: " + xhr.response;
 				}
-				
-				pageIndex++;
-				getProductsByPage(productList, totalPages, pageIndex);
-			},
-			error: function(result) {
-				// Throw an error to bail out of the try block
-				throw "Oops! Something happened getting the products on page " + pageIndex + "... Error: " + result.status + " (" + result.statusText + ")"
 			}
-		});
+		}
 	} else {
 		// We have all the products, lets go forward.
-		checkProducts(productList, 0, null, 0);
+		checkProducts(BOLD.metafieldNuker.productList, 0, null, 0);
 	}
 }
 
 function checkProducts(productList, productIndex, variantList, variantIndex) {
+	/*******
 	// Loop through each product and start checking for the metafields
 	if (productIndex < productList.length) {
 		if (variantList == null) {
@@ -187,9 +215,12 @@ function checkProducts(productList, productIndex, variantList, variantIndex) {
 		console.log('  Finished nuking current product...');
 		houseKeeping();
 	}
+	***/
 }
 
 function deleteMetafield(objectType, objectId, metafieldId) {
+	/**
+	
 	$.ajax({
 		method: "DELETE",
 		url: location.origin + "/admin/" + objectType + "/" + objectId + "/metafields/" + metafieldId + ".json",
@@ -200,11 +231,13 @@ function deleteMetafield(objectType, objectId, metafieldId) {
 			throw "Oops! Something happened deleting the metafield... Error: " + result.status + " (" + result.statusText + ")";
 		}
 	});
+
+	*/
 }
 
 function houseKeeping() {
 	finishTime = Date.now();
-	var elapsedTime = (finishTime - startTime) / 1000;
-	console.log('Finished checking ' + variantCount + ' variants.');
+	var elapsedTime = (BOLD.metafieldNuker.finishTime - BOLD.metafieldNuker.startTime) / 1000;
+	console.log('Finished checking ' + BOLD.metafieldNuker.variantCount + ' variants.');
 	console.log('Job took ' + elapsedTime.toString().toElapsedTime() + ' to complete.');
 }
