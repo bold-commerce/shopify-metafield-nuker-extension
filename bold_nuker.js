@@ -11,6 +11,7 @@ document.querySelector('#ns-selector').innerHTML += ('<option value="csp">New Cu
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_bundle">Product Bundles</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="inventory">Product Discount</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_qb">Quantity Breaks</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="bold_donation">Donations Manager</option>');
 
 document.querySelector('#ns-selector').innerHTML += ('<option value="bold_rp">Recurring Orders</option>');
 
@@ -127,9 +128,13 @@ function getProductsByPage() {
 			if (xhr.readyState == 2) {
 				console.log("Sending Request in progress");
 
-			} else if (xhr.readyState == 3) {
+			} else if (xhr.readyState == 4) {
 				//request completed, error?
 				if (xhr.status == 200) {
+					console.log(xhr);
+					console.log(xhr.response);
+					console.log(JSON.parse(xhr.response));
+
 					var data = JSON.parse(xhr.response)["products"];
 
 					// Loop through each product
@@ -196,18 +201,16 @@ function checkProducts() {
 						var data = JSON.parse(xhr.response)["metafields"];
 
 						for (var m = 0; m < data.length; m++) {
-
+							console.log(data[m]);
 							console.log(data[m].namespace);
 							console.log(BOLD.metafieldNuker.targetNamespace);
 
-							if (data[m].namespace == BOLD.metafieldNuker.targetNamespace) {
+							if (data[m].namespace.indexOf(BOLD.metafieldNuker.targetNamespace) != -1) {
 								// Delete the metafield
 								deleteMetafield("variant", BOLD.metafieldNuker.variantList[BOLD.metafieldNuker.variantIndex].id, data[m].id);
 							}
 						}
 
-						BOLD.metafieldNuker.variantIndex++;
-						checkProducts();
 
 					} else {
 						// Throw an error to bail out of the try block
@@ -215,10 +218,14 @@ function checkProducts() {
 					}
 				}
 			}
+			BOLD.metafieldNuker.variantIndex++;
+
+			checkProducts();
+
+
 		} else {
 			// Print the product ID that we're checking
-			console.log('%c  Checking product ID: ' + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + ' for metafields in namespace: ' + BOLD.metafieldNuker.targetNamespace, "background:green;color:white");
-
+			console.log('%c  Checking product ID: ' + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + ' for metafields in namespace: ' + BOLD.metafieldNuker.targetNamespace + '- (' + (BOLD.metafieldNuker.productIndex + 1) + '/' + BOLD.metafieldNuker.productList.length + ')', "background:green;color:white");
 
 			var xhr = new XMLHttpRequest();
 			xhr.open('GET', location.origin + "/admin/products/" + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + "/metafields.json?fields=id,namespace");
@@ -235,22 +242,34 @@ function checkProducts() {
 						var data = JSON.parse(xhr.response)["metafields"];
 
 						for (var m = 0; m < data.length; m++) {
-							if (data[m].namespace == BOLD.metafieldNuker.targetNamespace) {
+
+							console.log(data[m]);
+							console.log(data[m].namespace);
+							console.log(BOLD.metafieldNuker.targetNamespace);
+
+							if (data[m].namespace.indexOf(BOLD.metafieldNuker.targetNamespace) != -1) {
 								// Delete the metafield
 								deleteMetafield("product", BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id, data[m].id);
 							}
 						}
 
-						BOLD.metafieldNuker.productIndex++;
 						BOLD.metafieldNuker.variantList = null;
 						BOLD.metafieldNuker.variantIndex = 0
-						checkProducts();
+
+
+
 					} else {
 						// Throw an error to bail out of the try block
 						throw "Oops! Something happened getting the metafields for product ID: " + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + ". Error: " + result.status + " (" + result.statusText + ")";
 					}
 				}
 			}
+			BOLD.metafieldNuker.productIndex++;
+
+			checkProducts();
+
+
+
 		}
 	} else {
 		// We're done!
@@ -259,13 +278,17 @@ function checkProducts() {
 	}
 }
 
+function checkVariants() {
+
+
+}
+
 function deleteMetafield(objectType, objectId, metafieldId) {
 
 	var csrfToken = null;
 	if (document.querySelector('meta[name=csrf-token]')) {
 		csrfToken = document.querySelector('meta[name=csrf-token]').getAttribute('content');
-	}
-	else{
+	} else {
 		throw "Csrf meta tag element is non existant, either you're not on the 'All products' admin page or Shopify did a dumb"
 	}
 
