@@ -7,9 +7,14 @@ document.querySelector('#nukerJSnav').innerHTML += ('<li class="hidden"></li>');
 document.querySelector('#nukerJSnav').innerHTML += ('<li><select id="ns-selector"></select></li>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="bold_measurement">Buy the Measurement</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_csp">Customer Pricing</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="csp">New Customer Pricing</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_bundle">Product Bundles</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="inventory">Product Discount</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_qb">Quantity Breaks</option>');
+
+document.querySelector('#ns-selector').innerHTML += ('<option value="bold_rp">Recurring Orders</option>');
+
+
 document.querySelector('#nukerJSnav').innerHTML += ('<li><a id="bn_nuke">Nuke Metafields</a></li>');
 document.querySelector('#nukerJSnav').innerHTML += ('<li><a id="bn_settings">Settings</a></li>');
 document.querySelector('#nukerJSnav').innerHTML += ('<li></li>');
@@ -45,7 +50,9 @@ BOLD.metafieldNuker = {
 	totalPages: null,
 	productList: null,
 	pageIndex: null,
-
+	variantList: null,
+	variantIndex: null,
+	productIndex: null
 
 }
 
@@ -55,6 +62,7 @@ function startMetafieldNuker() {
 
 	// Get the namespace & logging setting
 	BOLD.metafieldNuker.targetNamespace = document.querySelector('#namespace').value;
+	console.log("Target Namespace: " + BOLD.metafieldNuker.targetNamespace);
 	BOLD.metafieldNuker.loggingEnabled = document.querySelector('#logging').value;
 
 	getProductCount();
@@ -122,22 +130,22 @@ function getProductsByPage() {
 			} else if (xhr.readyState == 3) {
 				//request completed, error?
 				if (xhr.status == 200) {
-					var data = JSON.parse(xhr.response);
+					var data = JSON.parse(xhr.response)["products"];
 
 					// Loop through each product
-					for (var i = 0; i < data.products.length; i++) {
+					for (var i = 0; i < data.length; i++) {
 						// Build an array of the variants for this product
 						var variants = [];
-						for (var o = 0; o < data.products[i].variants.length; o++) {
+						for (var o = 0; o < data[i].variants.length; o++) {
 							variants.push({
-								id: data.products[i].variants[o].id
+								id: data[i].variants[o].id
 							});
 							BOLD.metafieldNuker.variantCount++;
 						}
 
 						// Push the product ID and the variant array into the products array
 						BOLD.metafieldNuker.productList.push({
-							id: data.products[i].id,
+							id: data[i].id,
 							variants: variants
 						});
 					}
@@ -153,86 +161,136 @@ function getProductsByPage() {
 		}
 	} else {
 		// We have all the products, lets go forward.
-		checkProducts(BOLD.metafieldNuker.productList, 0, null, 0);
+		BOLD.metafieldNuker.variantList = null;
+		BOLD.metafieldNuker.productIndex = 0;
+		BOLD.metafieldNuker.variantIndex = 0;
+		checkProducts();
+		console.log("MOVING ON!!!");
 	}
 }
 
-function checkProducts(productList, productIndex, variantList, variantIndex) {
-	/*******
+function checkProducts() {
+
 	// Loop through each product and start checking for the metafields
-	if (productIndex < productList.length) {
-		if (variantList == null) {
-			variantList = productList[productIndex].variants;
+	if (BOLD.metafieldNuker.productIndex < BOLD.metafieldNuker.productList.length) {
+		if (BOLD.metafieldNuker.variantList == null) {
+			BOLD.metafieldNuker.variantList = BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].variants;
 		}
-		
-		if (variantIndex < variantList.length) {
+
+		if (BOLD.metafieldNuker.variantIndex < BOLD.metafieldNuker.variantList.length) {
 			// Print the variant ID that we're checking
-			console.log('    Checking variant ID: ' + variantList[variantIndex].id + ' for metafields in namespace: ' + targetNamespace + ' - (' + (variantIndex + 1) + '/' + variantList.length + ')');
-			$.ajax({
-				url: location.origin + "/admin/variants/" + variantList[variantIndex].id + "/metafields.json?fields=id,namespace",
-				dataType: "json",
-				success: function(data) {
-					for (var m = 0; m < data.metafields.length; m++) {
-						if (data.metafields[m].namespace == targetNamespace) {
-							// Delete the metafield
-							deleteMetafield("variant", variantList[variantIndex].id, data.metafields[m].id);
+			console.log('%c    Checking variant ID: ' + BOLD.metafieldNuker.variantList[BOLD.metafieldNuker.variantIndex].id + ' for metafields in namespace: ' + BOLD.metafieldNuker.targetNamespace + ' - (' + (BOLD.metafieldNuker.variantIndex + 1) + '/' + BOLD.metafieldNuker.variantList.length + ')', "background:blue;color:white");
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', location.origin + "/admin/variants/" + BOLD.metafieldNuker.variantList[BOLD.metafieldNuker.variantIndex].id + "/metafields.json?fields=id,namespace");
+			xhr.setRequestHeader('data-type', 'json')
+
+			xhr.send();
+
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 2) {
+
+				} else if (xhr.readyState == 3) {
+					//request completed, error?
+					if (xhr.status == 200) {
+						var data = JSON.parse(xhr.response)["metafields"];
+
+						for (var m = 0; m < data.length; m++) {
+
+							console.log(data[m].namespace);
+							console.log(BOLD.metafieldNuker.targetNamespace);
+
+							if (data[m].namespace == BOLD.metafieldNuker.targetNamespace) {
+								// Delete the metafield
+								deleteMetafield("variant", BOLD.metafieldNuker.variantList[BOLD.metafieldNuker.variantIndex].id, data[m].id);
+							}
 						}
+
+						BOLD.metafieldNuker.variantIndex++;
+						checkProducts();
+
+					} else {
+						// Throw an error to bail out of the try block
+						throw "Oops! Something happened getting the metafields for variant ID: " + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].variants[o].id + ". Error: " + result.status + " (" + result.statusText + ")";
 					}
-					
-					variantIndex++;
-					checkProducts(productList, productIndex, variantList, variantIndex);
-				},
-				error: function(result) {
-					// Throw an error to bail out of the try block
-					throw "Oops! Something happened getting the metafields for variant ID: " + productList[productIndex].variants[o].id + ". Error: " + result.status + " (" + result.statusText + ")";
 				}
-			});
+			}
 		} else {
 			// Print the product ID that we're checking
-			console.log('    Checking product ID: ' + productList[productIndex].id + ' for metafields in namespace: ' + targetNamespace);
-			$.ajax({
-				url: location.origin + "/admin/products/" + productList[productIndex].id + "/metafields.json?fields=id,namespace",
-				dataType: "json",
-				success: function(data) {
-					for (var m = 0; m < data.metafields.length; m++) {
-						if (data.metafields[m].namespace == targetNamespace) {
-							// Delete the metafield
-							deleteMetafield("product", productList[productIndex].id, data.metafields[m].id);
+			console.log('%c  Checking product ID: ' + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + ' for metafields in namespace: ' + BOLD.metafieldNuker.targetNamespace, "background:green;color:white");
+
+
+			var xhr = new XMLHttpRequest();
+			xhr.open('GET', location.origin + "/admin/products/" + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + "/metafields.json?fields=id,namespace");
+			xhr.setRequestHeader('data-type', 'json')
+
+			xhr.send();
+
+			xhr.onreadystatechange = function () {
+				if (xhr.readyState == 2) {
+
+				} else if (xhr.readyState == 3) {
+					//request completed, error?
+					if (xhr.status == 200) {
+						var data = JSON.parse(xhr.response)["metafields"];
+
+						for (var m = 0; m < data.length; m++) {
+							if (data[m].namespace == BOLD.metafieldNuker.targetNamespace) {
+								// Delete the metafield
+								deleteMetafield("product", BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id, data[m].id);
+							}
 						}
+
+						BOLD.metafieldNuker.productIndex++;
+						BOLD.metafieldNuker.variantList = null;
+						BOLD.metafieldNuker.variantIndex = 0
+						checkProducts();
+					} else {
+						// Throw an error to bail out of the try block
+						throw "Oops! Something happened getting the metafields for product ID: " + BOLD.metafieldNuker.productList[BOLD.metafieldNuker.productIndex].id + ". Error: " + result.status + " (" + result.statusText + ")";
 					}
-					
-					productIndex++;
-					checkProducts(productList, productIndex, null, 0);
-				},
-				error: function(result) {
-					// Throw an error to bail out of the try block
-					throw "Oops! Something happened getting the metafields for product ID: " + productList[productIndex].id + ". Error: " + result.status + " (" + result.statusText + ")";
 				}
-			});
+			}
 		}
 	} else {
 		// We're done!
 		console.log('  Finished nuking current product...');
 		houseKeeping();
 	}
-	***/
 }
 
 function deleteMetafield(objectType, objectId, metafieldId) {
-	/**
-	
-	$.ajax({
-		method: "DELETE",
-		url: location.origin + "/admin/" + objectType + "/" + objectId + "/metafields/" + metafieldId + ".json",
-		success: function(result) {
-			console.log('      Nuked metafield ID ' + metafieldId + ' in namespace "' + targetNamespace + '" for ' + objectType + ' ID: ' + objectId);
-		},
-		error: function(result) {
-			throw "Oops! Something happened deleting the metafield... Error: " + result.status + " (" + result.statusText + ")";
-		}
-	});
 
-	*/
+	var csrfToken = null;
+	if (document.querySelector('meta[name=csrf-token]')) {
+		csrfToken = document.querySelector('meta[name=csrf-token]').getAttribute('content');
+	}
+	else{
+		throw "Csrf meta tag element is non existant, either you're not on the 'All products' admin page or Shopify did a dumb"
+	}
+
+	var xhr = new XMLHttpRequest();
+
+	xhr.open('DELETE', "/admin/api/2019-07/products/" + objectId + "/metafields/" + metafieldId + ".json");
+
+	xhr.setRequestHeader("x-csrf-token", csrfToken);
+
+	xhr.send();
+
+	xhr.onreadystatechange = function () {
+		if (xhr.readyState == 2) {
+
+		} else if (xhr.readyState == 3) {
+			//request completed, error?
+			if (xhr.status == 200) {
+				console.log('%c      Nuked metafield ID ' + metafieldId + ' in namespace "' + BOLD.metafieldNuker.targetNamespace + '" for ' + objectType + ' ID: ' + objectId, "background:darkred;color:white");
+
+			} else {
+				// Throw an error to bail out of the try block
+				throw "Oops! Something happened deleting the metafield... Error: " + result.status + " (" + result.statusText + ")";
+			}
+		}
+	}
 }
 
 function houseKeeping() {
