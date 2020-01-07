@@ -221,7 +221,7 @@ function checkProducts(productIndex) {
 
 function checkVariants(productIndex, variantIndex) {
 	// Print the variant ID that we're checking
-	console.log('%c    Checking variant ID: ' + BOLD.metafieldNuker.productList[productIndex].variants[variantIndex].id + ' for metafields in namespace: ' + BOLD.metafieldNuker.targetNamespace + ' - (' + (variantIndex + 1) + '/' + BOLD.metafieldNuker.productList[productIndex].variants[variantIndex].count + ')', "background:blue;color:white");
+	console.log('%c    Checking variant ID: ' + BOLD.metafieldNuker.productList[productIndex].variants[variantIndex].id + ' for metafields in namespace: ' + BOLD.metafieldNuker.targetNamespace + ' - (' + (variantIndex + 1) + '/' + BOLD.metafieldNuker.productList[productIndex].variants.length + ')', "background:blue;color:white");
 
 	var xhr = new XMLHttpRequest();
 	xhr.open('GET', location.origin + "/admin/variants/" + BOLD.metafieldNuker.productList[productIndex].variants[variantIndex].id + "/metafields.json?fields=id,namespace&limit=250");
