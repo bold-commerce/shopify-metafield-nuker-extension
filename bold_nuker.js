@@ -7,13 +7,13 @@ document.querySelector('#nukerJSnav').innerHTML += ('<li class="hidden"></li>');
 document.querySelector('#nukerJSnav').innerHTML += ('<li><select id="ns-selector"></select></li>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="bold_measurement">Buy the Measurement</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_csp">Customer Pricing</option>');
-document.querySelector('#ns-selector').innerHTML += ('<option value="csp">New Customer Pricing</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="csp">Customer Pricing (NEW)</option>');
+document.querySelector('#ns-selector').innerHTML += ('<option value="bold_donation">Donations Manager</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_bundle">Product Bundles</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="inventory">Product Discount</option>');
 document.querySelector('#ns-selector').innerHTML += ('<option value="shappify_qb">Quantity Breaks</option>');
-document.querySelector('#ns-selector').innerHTML += ('<option value="bold_donation">Donations Manager</option>');
-
 document.querySelector('#ns-selector').innerHTML += ('<option value="bold_rp">Recurring Orders</option>');
+
 
 
 document.querySelector('#nukerJSnav').innerHTML += ('<li><a id="bn_nuke">Nuke Metafields</a></li>');
